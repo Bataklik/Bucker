@@ -1,6 +1,6 @@
 using Domain.Enums;
 
-namespace Domain.models;
+namespace Domain.Models;
 
 public class Bug {
     // https://www.w3schools.com/cs/cs_properties.php
@@ -36,9 +36,9 @@ public class Bug {
     }
 
 
-    public Bug(string bugTitle, string bugDescription) {
-        Title = bugTitle;
-        Description = bugDescription;
+    public Bug(string title, string description) {
+        Title = title;
+        Description = description;
         Status = BugStatus.Open;
     }
 }
