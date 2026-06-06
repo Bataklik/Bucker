@@ -1,3 +1,5 @@
+using Domain.Enums;
+
 namespace Domain.models;
 
 public class Bug {
@@ -25,8 +27,18 @@ public class Bug {
         set { _description = value; }
     }
 
+
     private BugStatus _status;
-    public BugStatus Status { get; set; }
+
+    public BugStatus Status {
+        get { return _status; }
+        set { _status = value; }
+    }
 
 
+    public Bug(string bugTitle, string bugDescription) {
+        Title = bugTitle;
+        Description = bugDescription;
+        Status = BugStatus.Open;
+    }
 }
