@@ -23,17 +23,17 @@ namespace Web.Controllers {
 
         // GET: api/Bug
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Bug>>> GetBug() {
-            var bugs = await _service.getBugsDbAsync();
+        public async Task<ActionResult<IEnumerable<Bug>>> GetBugs() {
+            var bugs = await _service.GetBugsDbAsync();
             return Ok(bugs);
         }
 
         // GET: api/Bug/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Bug>> GetBug(int id) {
-            var bug = await _context.Bugs.FindAsync(id);
+        public async Task<ActionResult<Bug>> GetBug(Guid id) {
+            var bug = await _service.GetBugDbAsync(id);
 
-            if (bug == null) {
+            if (bug.Equals(null)) {
                 return NotFound();
             }
 
@@ -48,20 +48,11 @@ namespace Web.Controllers {
                 return BadRequest();
             }
 
-            _context.Entry(bug).State = EntityState.Modified;
+            var isOk = await _service.UpdateBugAsync(bug);
 
-            try {
-                await _context.SaveChangesAsync();
+            if (!isOk) {
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException) {
-                if (!BugExists(id)) {
-                    return NotFound();
-                }
-                else {
-                    throw;
-                }
-            }
-
             return NoContent();
         }
 
