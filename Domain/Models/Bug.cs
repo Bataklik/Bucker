@@ -1,14 +1,18 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Domain.Enums;
 
 namespace Domain.Models;
 
+[Table("Bugs")]
 public class Bug {
     // https://www.w3schools.com/cs/cs_properties.php
     // https://stackoverflow.com/questions/3847832/understanding-private-setters
     // https://dev.to/mashrulhaque/how-to-design-a-maintainable-net-solution-structure-for-growing-teams-284n
-    private int _id;
+    private Guid _id;
 
-    public int Id {
+    [Key]
+    public Guid Id {
         get { return _id; }
         private set { _id = value; }
     }
