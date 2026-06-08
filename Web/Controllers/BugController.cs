@@ -12,7 +12,7 @@ using Domain.Models;
 // https://hub.docker.com/r/zabbix/zabbix-server-mysql
 
 namespace Web.Controllers {
-    [Route("api/[controller]")]
+    [Route("api/bugs")]
     [ApiController]
     public class BugController : ControllerBase {
         private readonly IBugService _service;
@@ -21,16 +21,16 @@ namespace Web.Controllers {
             _service = service;
         }
 
-        // GET: api/Bug
+        // GET: api/Bugs
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Bug>>> GetBugs() {
             var bugs = await _service.GetBugsDbAsync();
             return Ok(bugs);
         }
 
-        // GET: api/Bug/5
+        // GET: api/Bugs/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Bug>> GetBug(Guid id) {
+        public async Task<ActionResult<Bug>> GetBug(int id) {
             var bug = await _service.GetBugDbAsync(id);
 
             if (bug.Equals(null)) {
@@ -40,10 +40,10 @@ namespace Web.Controllers {
             return bug;
         }
 
-        // PUT: api/Bug/5
+        // PUT: api/Bugs/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBug(Guid id, Bug bug) {
+        public async Task<IActionResult> PutBug(int id, Bug bug) {
             if (id != bug.Id) {
                 return BadRequest();
             }
@@ -56,32 +56,28 @@ namespace Web.Controllers {
             return NoContent();
         }
 
-        // POST: api/Bug
+        // POST: api/Bugs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Bug>> PostBug(Bug bug) {
-            _context.Bugs.Add(bug);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetBug", new{ id = bug.Id }, bug);
+           
+            var createdBug = await _service.CreateBugAsync(bug);
+            return CreatedAtAction(nameof(GetBug), new{ id = createdBug.Id }, createdBug);
         }
 
-        // DELETE: api/Bug/5
+        // DELETE: api/Bugs/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBug(int id) {
-            var bug = await _context.Bugs.FindAsync(id);
-            if (bug == null) {
+            var isDeleted = await _service.DeleteBugAsync(id);
+            if (!isDeleted) {
                 return NotFound();
             }
-
-            _context.Bugs.Remove(bug);
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool BugExists(Guid id) {
-            return _context.Bugs.Any(e => e.Id == id);
+        private bool BugExists(int id) {
+            return _service.BugExists(id);
         }
     }
 }

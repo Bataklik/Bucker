@@ -15,7 +15,7 @@ public class BugService : IBugService {
         return await _dbContext.Bugs.ToListAsync();
     }
 
-    public async Task<Bug> GetBugDbAsync(Guid id) {
+    public async Task<Bug> GetBugDbAsync(int id) {
         return await _dbContext.Bugs.FindAsync(id);
     }
 
@@ -34,5 +34,34 @@ public class BugService : IBugService {
 
             throw;
         }
+    }
+
+    public async Task<Bug> CreateBugAsync(Bug bug) {
+        _dbContext.Bugs.Add(bug);
+        await _dbContext.SaveChangesAsync();
+
+        return bug;
+    }
+
+    public async Task<bool> DeleteBugAsync(int id) {
+        var bug = await GetBugDbAsync(id);
+
+        if (bug.Equals(null)) {
+            return false;
+        }
+
+        _dbContext.Bugs.Add(bug);
+        await _dbContext.SaveChangesAsync();
+
+        return true;
+    }
+
+    public bool BugExists(int id) {
+        var exists = _dbContext.Bugs.Any(e => e.Id == id);
+        if (!exists) {
+            return false;
+        }
+
+        return true;
     }
 }

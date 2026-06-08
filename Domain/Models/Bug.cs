@@ -9,10 +9,10 @@ public class Bug {
     // https://www.w3schools.com/cs/cs_properties.php
     // https://stackoverflow.com/questions/3847832/understanding-private-setters
     // https://dev.to/mashrulhaque/how-to-design-a-maintainable-net-solution-structure-for-growing-teams-284n
-    private Guid _id;
+    private int _id;
 
     [Key]
-    public Guid Id {
+    public int Id {
         get { return _id; }
         private set { _id = value; }
     }
